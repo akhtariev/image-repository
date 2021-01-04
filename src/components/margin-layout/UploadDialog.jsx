@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import { Checkbox, ListItemIcon } from '@material-ui/core';
 import ContainerGrid from '../common/ContainerGrid';
 import Status from '../common/Status';
+import { storage, firestore } from '../../utils/firebase';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -35,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 const Transition = React.forwardRef((props, ref) => <Slide direction='up' ref={ref} {...props} />);
 
 export default function UploadDialog() {
+  const userState = useSelector(state => state.user);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [files, setFiles] = React.useState([]);
@@ -55,6 +58,17 @@ export default function UploadDialog() {
 
   const handleUpload = () => {
     setIsUploading(true);
+
+    if (files.length > 0) {
+      const storageRef = storage.ref();
+
+      files.forEach(async file => {
+        const fileRef = storageRef.child(`${userState.uid}/${file.data.name}`);
+        await fileRef.put(file.data);
+
+        await firestore.collection('images').doc().set({ name: file.data.name, storageURL: fileRef.fullPath, tags: [], isPublic: file.isPublic, uploadedBy: userState.uid });
+      });
+    }
 
     handleClose();
   };
