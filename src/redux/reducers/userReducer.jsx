@@ -1,11 +1,13 @@
-import { SET_USER } from '../actions/userActions';
+import { SET_USER, TOGGLE_UPLOAD } from '../actions/userActions';
 
-const initialState = null;
+const initialState = { auth: null, isUploading: false };
 
 const userReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_USER:
-      return payload;
+      return { ...state, auth: payload };
+    case TOGGLE_UPLOAD:
+      return { ...state, isUploading: !state.isUploading };
     default:
       return state;
   }

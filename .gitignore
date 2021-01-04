@@ -29,3 +29,5 @@ yarn-error.log*
 *.cache
 
 *.log
+
+functions/google-access-key.json

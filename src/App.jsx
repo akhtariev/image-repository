@@ -24,8 +24,8 @@ const App = () => {
   }
   return (
     <>
-      {userState && (<AuthenticatedApp />)}
-      {!userState && (
+      {userState.auth && (<AuthenticatedApp />)}
+      {!userState.auth && (
         <LandingPage />
       )}
     </>

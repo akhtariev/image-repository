@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,8 +16,9 @@ import PublishIcon from '@material-ui/icons/Publish';
 import Grid from '@material-ui/core/Grid';
 import { Checkbox, ListItemIcon } from '@material-ui/core';
 import ContainerGrid from '../common/ContainerGrid';
-import Status from '../common/Status';
-import { storage, firestore } from '../../utils/firebase';
+// import Status from '../common/Status';
+import { functions, storage } from '../../utils/firebase';
+import { toggleUpload } from '../../redux/actions/userActions';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -37,40 +38,49 @@ const useStyles = makeStyles(theme => ({
 const Transition = React.forwardRef((props, ref) => <Slide direction='up' ref={ref} {...props} />);
 
 export default function UploadDialog() {
-  const userState = useSelector(state => state.user);
   const classes = useStyles();
+  const userState = useSelector(state => state.user);
   const [open, setOpen] = React.useState(false);
   const [files, setFiles] = React.useState([]);
-  const [isUploading, setIsUploading] = React.useState(false);
-
-  if (isUploading) {
-    return <Status message='Authenticating...' loading />;
-  }
+  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    setIsUploading(false);
+    dispatch(toggleUpload());
     setOpen(false);
   };
 
-  const handleUpload = () => {
-    setIsUploading(true);
+  const handleUpload = async () => {
+    dispatch(toggleUpload());
 
     if (files.length > 0) {
-      const storageRef = storage.ref();
+      try {
+        const storageRef = storage.ref();
+        const storageUploadResult = await Promise.all(files.map(async file => {
+          const storageLocation = `${userState.auth.uid}/${file.data.name}`;
+          const fileRef = storageRef.child(storageLocation);
+          await fileRef.put(file.data);
+          return {
+            downloadURL: await fileRef.getDownloadURL(),
+            isPublic: file.isPublic,
+            name: file.data.name,
+            uploadPath: fileRef.fullPath,
+          };
+        }));
 
-      files.forEach(async file => {
-        const fileRef = storageRef.child(`${userState.uid}/${file.data.name}`);
-        await fileRef.put(file.data);
-
-        await firestore.collection('images').doc().set({ name: file.data.name, storageURL: fileRef.fullPath, tags: [], isPublic: file.isPublic, uploadedBy: userState.uid });
-      });
+        console.log(JSON.stringify(storageUploadResult));
+        // eslint-disable-next-line max-len
+        // await admin.firestore().collection('images').doc().set({ name: file.data.name, storageURL: fileRef.fullPath, tags: [], isPublic: file.isPublic, uploadedBy: context.auth.uid });
+        const saveImages = functions.httpsCallable('saveImages');
+        await saveImages(storageUploadResult);
+        handleClose();
+      } catch (error) {
+        console.log(error);
+      }
     }
-
-    handleClose();
   };
 
   const onImageChange = event => {
