@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useAuth0 } from '@auth0/auth0-react';
 import Header from '../margin-layout/Header';
 import LandingPageLayout from './LandingPageLayout';
+import { auth, authObj } from '../../utils/firebase';
 
 const backgroundImage = 'https://akhtariev.ca/img/cypress.jpg?auto=format&fit=crop&w=1400&q=80';
 
@@ -34,7 +34,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LandingPage = () => {
-  const { loginWithRedirect } = useAuth0();
+  const loginWithRedirect = () => {
+    const provider = new authObj.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+  };
+
   const classes = useStyles();
 
   return (

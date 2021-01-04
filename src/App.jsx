@@ -1,20 +1,31 @@
-import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthenticatedApp from './components/AuthenticatedApp';
-import Status from './components/common/Status';
 import LandingPage from './components/common/LandingPage';
+import Status from './components/common/Status';
+import { auth } from './utils/firebase';
+import { setUser } from './redux/actions/userActions';
 
 const App = () => {
-  const { loading, isAuthenticated } = useAuth0();
+  const userState = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  if (loading) {
+  useEffect(() => {
+    setIsLoggingIn(true);
+    auth.onAuthStateChanged(userAuth => {
+      dispatch(setUser(userAuth));
+      setIsLoggingIn(false);
+    });
+  }, [setIsLoggingIn, dispatch]);
+
+  if (isLoggingIn) {
     return <Status message='Authenticating...' loading />;
   }
-
   return (
     <>
-      {isAuthenticated && (<AuthenticatedApp />)}
-      {!isAuthenticated && (
+      {userState && (<AuthenticatedApp />)}
+      {!userState && (
         <LandingPage />
       )}
     </>
