@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Header from './margin-layout/Header';
+import SearchAppBar from './margin-layout/SearchAppBar';
 
 const useStyles = makeStyles(theme => ({
   headerGrid: theme.mixins.toolbar,
@@ -26,7 +26,7 @@ const AuthenticatedApp = () => {
   return (
     <Grid container>
       <Grid item xs={12} className={classes.headerGrid}>
-        <Header />
+        <SearchAppBar />
       </Grid>
       <Grid item xs={12}>
         <Box className={classes.paper}>
