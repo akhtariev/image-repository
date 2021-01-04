@@ -21,6 +21,5 @@ export const firestore = firebase.firestore();
 export const storage = firebase.storage();
 export const functions = firebase.functions();
 if (process.env.NODE_ENV === 'development') {
-  console.log('here');
   functions.useEmulator('localhost', 5001);
 }
