@@ -84,7 +84,12 @@ export default function SearchAppBar() {
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
+            component='label'
           >
+            <input
+              type='file'
+              hidden
+            />
             <PublishIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>
