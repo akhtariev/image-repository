@@ -30,7 +30,7 @@ const AuthenticatedApp = () => {
       </Grid>
       <Grid item xs={12}>
         <Box className={classes.paper}>
-          <Typography h3>Authenticated</Typography>
+          <Typography>Authenticated</Typography>
         </Box>
       </Grid>
     </Grid>

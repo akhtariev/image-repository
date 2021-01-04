@@ -13,6 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import PublishIcon from '@material-ui/icons/Publish';
 import Grid from '@material-ui/core/Grid';
+import { Checkbox, ListItemIcon } from '@material-ui/core';
 import ContainerGrid from '../common/ContainerGrid';
 import Status from '../common/Status';
 
@@ -24,6 +25,9 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+  },
+  btn: {
+    marginBottom: 30,
   },
 }));
 
@@ -60,10 +64,15 @@ export default function UploadDialog() {
       const filesToUpload = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const file of event.target.files) {
-        filesToUpload.push(file);
+        filesToUpload.push({ data: file, isPublic: false });
       }
       setFiles([...files, ...filesToUpload]);
     }
+  };
+
+  const checkImage = index => {
+    const newFiles = [...files];
+    newFiles[index].isPublic = !files[index].isPublic;
   };
 
   return (
@@ -97,24 +106,44 @@ export default function UploadDialog() {
             <Button
               variant='contained'
               component='label'
+              className={classes.btn}
             >
               Add Images
               <input type='file' multiple hidden onChange={e => onImageChange(e)} />
             </Button>
           </ContainerGrid>
-          <ContainerGrid xs={12}>
-            <List>
-              {
+          {files.length > 0 && (
+            <ContainerGrid xs={12}>
+              <ContainerGrid xs={12}>
+                <Typography>
+                  Check the box for public images
+                </Typography>
+              </ContainerGrid>
+              <ContainerGrid xs={12}>
+                <List>
+                  {
             // eslint-disable-next-line no-unused-vars
-            files.map(file => (
-              <ListItem>
-                <ListItemText primary={file.name} secondary={`Size: ${file.size}`} />
+            files.map((file, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <ListItem key={index}>
+                <ListItemIcon>
+                  <Checkbox
+                    edge='start'
+                    tabIndex={-1}
+                    disableRipple
+                    onChange={checkImage(index)}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={file.data.name} secondary={`Size: ${file.data.size}`} />
               </ListItem>
             ))
             }
-            </List>
+                </List>
 
-          </ContainerGrid>
+              </ContainerGrid>
+            </ContainerGrid>
+
+          )}
         </Grid>
 
       </Dialog>
