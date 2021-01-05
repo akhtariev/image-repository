@@ -1,4 +1,4 @@
-# Imaaginary Image Repository
+# Imaginary Image Repository
 
 A repository with public and private images. It automatically recognizes what you have on the image you upload and tags the photos appropriately. Then, you can easily search for "that photo from wedding" across your 10000 photo collection.
 
