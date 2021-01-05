@@ -16,9 +16,8 @@ import PublishIcon from '@material-ui/icons/Publish';
 import Grid from '@material-ui/core/Grid';
 import { Checkbox, ListItemIcon } from '@material-ui/core';
 import ContainerGrid from '../common/ContainerGrid';
-// import Status from '../common/Status';
 import { functions, storage } from '../../utils/firebase';
-import { toggleUpload } from '../../redux/actions/userActions';
+import { invalidateUpload, toggleUpload, succeedUpload } from '../../redux/actions/appActions';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -39,7 +38,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction='up' ref={r
 
 export default function UploadDialog() {
   const classes = useStyles();
-  const userState = useSelector(state => state.user);
+  const appState = useSelector(state => state.app);
   const [open, setOpen] = React.useState(false);
   const [files, setFiles] = React.useState([]);
   const dispatch = useDispatch();
@@ -57,9 +56,10 @@ export default function UploadDialog() {
 
     if (files.length > 0) {
       try {
+        handleClose();
         const storageRef = storage.ref();
         const storageUploadResult = await Promise.all(files.map(async file => {
-          const storageLocation = `${userState.auth.uid}/${file.data.name}`;
+          const storageLocation = `${appState.auth.uid}/${file.data.name}`;
           const fileRef = storageRef.child(storageLocation);
           await fileRef.put(file.data);
           return {
@@ -72,11 +72,9 @@ export default function UploadDialog() {
 
         const saveImages = functions.httpsCallable('saveImages');
         await saveImages(storageUploadResult);
-        handleClose();
-        dispatch(toggleUpload());
+        dispatch(succeedUpload());
       } catch (error) {
-        dispatch(toggleUpload());
-        // TODO: add a pop up with error
+        dispatch(invalidateUpload());
       }
     }
   };

@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchAppBar from './margin-layout/SearchAppBar';
+import UploadFeedback from './common/UploadFeedback';
 
 const useStyles = makeStyles(theme => ({
   headerGrid: theme.mixins.toolbar,
@@ -33,6 +34,8 @@ const AuthenticatedApp = () => {
           <Typography>Authenticated</Typography>
         </Box>
       </Grid>
+
+      <UploadFeedback />
     </Grid>
   );
 };
