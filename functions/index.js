@@ -20,7 +20,6 @@ exports.saveImages = functions.https.onCall(async (files, context) => {
     const client = new vision.ImageAnnotatorClient();
 
     await Promise.all(files.map(async file => {
-      console.log("here");
       const [result] = await client.labelDetection(
         `gs://image-repository-c1030.appspot.com/${file.uploadPath}`
       );
@@ -34,6 +33,7 @@ exports.saveImages = functions.https.onCall(async (files, context) => {
           isPublic: file.isPublic, 
           uploadedBy: context.auth.uid, 
           tags: result.labelAnnotations,
+          fullUploaderName: context.auth.token.name,
           timeAdded: Date.now()
         });
     }));

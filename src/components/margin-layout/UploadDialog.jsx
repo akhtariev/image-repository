@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import { Checkbox, ListItemIcon } from '@material-ui/core';
 import ContainerGrid from '../common/ContainerGrid';
 import { functions, storage } from '../../utils/firebase';
-import { invalidateUpload, toggleUpload, succeedUpload } from '../../redux/actions/appActions';
+import { invalidateUpload, toggleUpload, succeedUpload, loadImages } from '../../redux/actions/appActions';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -38,7 +38,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction='up' ref={r
 
 export default function UploadDialog() {
   const classes = useStyles();
-  const appState = useSelector(state => state.app);
+  const userState = useSelector(state => state.user);
   const [open, setOpen] = React.useState(false);
   const [files, setFiles] = React.useState([]);
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ export default function UploadDialog() {
         handleClose();
         const storageRef = storage.ref();
         const storageUploadResult = await Promise.all(files.map(async file => {
-          const storageLocation = `${appState.auth.uid}/${file.data.name}`;
+          const storageLocation = `${userState.auth.uid}/${file.data.name}`;
           const fileRef = storageRef.child(storageLocation);
           await fileRef.put(file.data);
           return {
@@ -69,9 +69,9 @@ export default function UploadDialog() {
             uploadPath: fileRef.fullPath,
           };
         }));
-
         const saveImages = functions.httpsCallable('saveImages');
         await saveImages(storageUploadResult);
+        await loadImages(dispatch);
         dispatch(succeedUpload());
       } catch (error) {
         dispatch(invalidateUpload());
@@ -93,6 +93,7 @@ export default function UploadDialog() {
   const checkImage = index => {
     const newFiles = [...files];
     newFiles[index].isPublic = !files[index].isPublic;
+    setFiles(newFiles);
   };
 
   return (
@@ -151,7 +152,7 @@ export default function UploadDialog() {
                     edge='start'
                     tabIndex={-1}
                     disableRipple
-                    onChange={checkImage(index)}
+                    onChange={() => checkImage(index)}
                   />
                 </ListItemIcon>
                 <ListItemText primary={file.data.name} secondary={`Size: ${file.data.size}`} />

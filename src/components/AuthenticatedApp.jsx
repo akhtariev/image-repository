@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchAppBar from './margin-layout/SearchAppBar';
 import UploadFeedback from './common/UploadFeedback';
 import DisplayCard from './image/DisplayCard';
 import ContainerGrid from './common/ContainerGrid';
+import Status from './common/Status';
+import { loadImages } from '../redux/actions/appActions';
 
 const useStyles = makeStyles(theme => ({
   headerGrid: theme.mixins.toolbar,
@@ -24,16 +27,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AuthenticatedApp = () => {
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const appState = useSelector(state => state.app);
+  const dispatch = useDispatch();
   const classes = useStyles();
 
-  const images = [{
-    name: 'Photo',
-    downloadPath: 'https://firebasestorage.googleapis.com/v0/b/image-repository-c1030.appspot.com/o/Q3xHqjJy61TXgWIyBvvHepRnUJr2%2FScreenshot%20from%202020-12-17%2015-58-31.png?alt=media&token=57fc4fee-50a1-46b9-aa6d-6e2e7e93236c',
-    isPublic: true,
-    uploadedBy: 'Roman',
-    tags: ['Hello', 'Hi'],
-    timeAdded: 1609816955,
-  }];
+  useEffect(() => {
+    const getImages = async () => {
+      setIsLoadingImages(true);
+      await loadImages(dispatch);
+      setIsLoadingImages(false);
+    };
+
+    getImages();
+  }, [dispatch]);
+
+  if (isLoadingImages) {
+    return <Status message='Loading images...' loading />;
+  }
 
   return (
     <Grid container>
@@ -43,10 +54,10 @@ const AuthenticatedApp = () => {
 
       {
       // eslint-disable-next-line no-unused-vars
-      images.length > 0 && (
-        images.map((image, index) => (
+      appState.publicImages.length > 0 && (
+        appState.publicImages.map((image, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <ContainerGrid key={index} item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <ContainerGrid key={index} item xs={12} sm={12} md={12} lg={6} xl={4}>
             <DisplayCard image={image} />
           </ContainerGrid>
         )))

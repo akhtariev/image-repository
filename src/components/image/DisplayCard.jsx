@@ -13,8 +13,9 @@ import ShareIcon from '@material-ui/icons/Share';
 const useStyles = makeStyles(theme => ({
   root: {
     marginTop: 50,
-    minWidth: 360,
-    maxWidth: 450,
+    minWidth: 350,
+    maxWidth: 600,
+    minHeight: 600,
   },
   media: {
     height: 0,
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function DisplayCard(props) {
   const { image } = props;
-  const { name, downloadPath, isPublic, uploadedBy, tags, timeAdded } = image;
+  const { name, downloadURL, isPublic, tags, timeAdded, fullUploaderName } = image;
   const classes = useStyles();
 
   return (
@@ -48,15 +49,15 @@ export default function DisplayCard(props) {
       <CardHeader
         avatar={(
           <Avatar aria-label='recipe' className={classes.avatar}>
-            {uploadedBy.substr(0, 1).toUpperCase()}
+            {fullUploaderName.substr(0, 1).toUpperCase()}
           </Avatar>
         )}
-        title={uploadedBy}
+        title={fullUploaderName}
         subheader={`${name} - ${new Date(timeAdded * 1000).toLocaleDateString()} - ${isPublic ? 'Public' : 'Private'}`}
       />
       <CardMedia
         className={classes.media}
-        image={downloadPath}
+        image={downloadURL}
         title='Paella dish'
       />
       <CardContent>
@@ -65,7 +66,7 @@ export default function DisplayCard(props) {
           <Chip
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            label={tag}
+            label={tag.description}
             className={classes.chip}
           />
         ))
