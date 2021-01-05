@@ -23,10 +23,6 @@ const App = () => {
     return <Status message='Authenticating...' loading />;
   }
 
-  // if (userState.isUploading) {
-  //   return <Status message='Uploading images...' loading />;
-  // }
-
   return (
     <>
       {userState.auth && (<AuthenticatedApp />)}

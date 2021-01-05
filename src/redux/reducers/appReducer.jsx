@@ -1,6 +1,12 @@
 import { INVALIDATE_UPLOAD, TOGGLE_UPLOAD, SUCCEED_UPLOAD, RESET_FEEDBACK } from '../actions/appActions';
 
-const initialState = { isUploading: false, didInvalidate: false, succeeded: false };
+const initialState = {
+  isUploading: false,
+  didInvalidate: false,
+  succeeded: false,
+  privateImages: [],
+  publicImages: [],
+};
 
 const userReducer = (state = initialState, { type }) => {
   switch (type) {
