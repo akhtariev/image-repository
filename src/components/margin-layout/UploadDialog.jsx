@@ -71,7 +71,7 @@ export default function UploadDialog() {
         }));
         const saveImages = functions.httpsCallable('saveImages');
         await saveImages(storageUploadResult);
-        await loadImages(dispatch);
+        await loadImages(dispatch, userState.auth.uid);
         dispatch(succeedUpload());
       } catch (error) {
         dispatch(invalidateUpload());

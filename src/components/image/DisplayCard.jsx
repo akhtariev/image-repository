@@ -53,7 +53,7 @@ export default function DisplayCard(props) {
           </Avatar>
         )}
         title={fullUploaderName}
-        subheader={`${name} - ${new Date(timeAdded * 1000).toLocaleDateString()} - ${isPublic ? 'Public' : 'Private'}`}
+        subheader={`${name} - ${new Date(timeAdded).toLocaleDateString()} - ${isPublic ? 'Public' : 'Private'}`}
       />
       <CardMedia
         className={classes.media}

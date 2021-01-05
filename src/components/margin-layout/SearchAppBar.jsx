@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import UploadDialog from './UploadDialog';
+import ModeSelect from '../common/ModeSelect';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -95,6 +96,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <ModeSelect />
           <div className={classes.grow} />
         </Toolbar>
       </AppBar>

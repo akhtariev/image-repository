@@ -29,23 +29,25 @@ const useStyles = makeStyles(theme => ({
 const AuthenticatedApp = () => {
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const appState = useSelector(state => state.app);
+  const userState = useSelector(state => state.user);
   const dispatch = useDispatch();
   const classes = useStyles();
 
   useEffect(() => {
     const getImages = async () => {
       setIsLoadingImages(true);
-      await loadImages(dispatch);
+      await loadImages(dispatch, userState.auth.uid);
       setIsLoadingImages(false);
     };
 
     getImages();
-  }, [dispatch]);
+  }, [dispatch, userState]);
 
   if (isLoadingImages) {
     return <Status message='Loading images...' loading />;
   }
 
+  const imagesToShow = appState.isPublicMode ? appState.publicImages : appState.privateImages;
   return (
     <Grid container>
       <Grid item xs={12} className={classes.headerGrid}>
@@ -53,14 +55,12 @@ const AuthenticatedApp = () => {
       </Grid>
 
       {
-      // eslint-disable-next-line no-unused-vars
-      appState.publicImages.length > 0 && (
-        appState.publicImages.map((image, index) => (
+        imagesToShow.map((image, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <ContainerGrid key={index} item xs={12} sm={12} md={12} lg={6} xl={4}>
             <DisplayCard image={image} />
           </ContainerGrid>
-        )))
+        ))
       }
 
       <UploadFeedback />

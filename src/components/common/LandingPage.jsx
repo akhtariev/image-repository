@@ -51,10 +51,10 @@ const LandingPage = () => {
           {/* Increase the network loading priority of the background image. */}
           <img style={{ display: 'none' }} src={backgroundImage} alt='increase priority' />
           <Typography color='inherit' align='center' variant='h3' marked='center'>
-            Your Image Repository
+            Your Intelligent Image Repository
           </Typography>
           <Typography color='inherit' align='center' variant='h5' className={classes.h5}>
-            Seamless storage
+            Automatically categorizes your photos
           </Typography>
           <Button
             color='primary'
@@ -67,7 +67,7 @@ const LandingPage = () => {
             Log In
           </Button>
           <Typography variant='body2' color='inherit' className={classes.more}>
-            Manage your images
+            Seamless storage
           </Typography>
         </LandingPageLayout>
       </Grid>
