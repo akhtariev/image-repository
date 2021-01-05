@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import UploadDialog from './UploadDialog';
 import ModeSelect from '../common/ModeSelect';
+import { updateFilter } from '../../redux/actions/appActions';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -73,7 +75,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SearchAppBar() {
+  const dispatch = useDispatch();
   const classes = useStyles();
+
+  const handleChange = searchFor => {
+    dispatch(updateFilter(searchFor));
+  };
 
   return (
     <div className={classes.grow}>
@@ -94,6 +101,7 @@ export default function SearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={e => handleChange(e.target.value)}
             />
           </div>
           <ModeSelect />

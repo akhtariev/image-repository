@@ -47,7 +47,19 @@ const AuthenticatedApp = () => {
     return <Status message='Loading images...' loading />;
   }
 
-  const imagesToShow = appState.isPublicMode ? appState.publicImages : appState.privateImages;
+  let imagesToShow = appState.isPublicMode ? appState.publicImages : appState.privateImages;
+  if (appState.filter !== null) {
+    imagesToShow = imagesToShow.filter(image => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const tag of image.tags) {
+        if (JSON.stringify(tag.description).toLowerCase().includes(appState.filter.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
   return (
     <Grid container>
       <Grid item xs={12} className={classes.headerGrid}>

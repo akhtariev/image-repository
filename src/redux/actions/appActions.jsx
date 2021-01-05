@@ -7,6 +7,7 @@ export const SUCCEED_UPLOAD = 'SUCCEED_UPLOAD';
 export const SET_IMAGES = 'SET_PUBLIC_IMAGES';
 export const SET_MODE = 'SET_MODE';
 export const BEGIN_LOADING_IMAGES = 'BEGIN_LOADING_IMAGES';
+export const UPDATE_FILTER = 'UPDATE_FILTER';
 
 export const toggleUpload = () => ({
   type: TOGGLE_UPLOAD,
@@ -36,6 +37,11 @@ export const setMode = isPublic => ({
 
 export const beginLoadingImages = () => ({
   type: BEGIN_LOADING_IMAGES,
+});
+
+export const updateFilter = newFilter => ({
+  type: UPDATE_FILTER,
+  payload: newFilter,
 });
 
 export const loadImages = async (dispatch, curUserId) => {

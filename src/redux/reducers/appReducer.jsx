@@ -1,4 +1,13 @@
-import { INVALIDATE_UPLOAD, TOGGLE_UPLOAD, SUCCEED_UPLOAD, RESET_FEEDBACK, SET_IMAGES, BEGIN_LOADING_IMAGES, SET_MODE } from '../actions/appActions';
+import {
+  INVALIDATE_UPLOAD,
+  TOGGLE_UPLOAD,
+  SUCCEED_UPLOAD,
+  RESET_FEEDBACK,
+  SET_IMAGES,
+  BEGIN_LOADING_IMAGES,
+  SET_MODE,
+  UPDATE_FILTER,
+} from '../actions/appActions';
 
 const initialState = {
   isUploading: false,
@@ -8,6 +17,7 @@ const initialState = {
   privateImages: [],
   publicImages: [],
   isPublicMode: true,
+  filter: null,
 };
 
 const appReducer = (state = initialState, { type, payload }) => {
@@ -22,6 +32,8 @@ const appReducer = (state = initialState, { type, payload }) => {
       return { ...state, isUploading: false, didInvalidate: false, succeeded: false };
     case BEGIN_LOADING_IMAGES:
       return { ...state, isLoadingImages: true };
+    case UPDATE_FILTER:
+      return { ...state, filter: payload === '' ? null : payload };
     case SET_IMAGES:
       return {
         ...state,
