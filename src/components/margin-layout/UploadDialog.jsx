@@ -49,7 +49,6 @@ export default function UploadDialog() {
   };
 
   const handleClose = () => {
-    dispatch(toggleUpload());
     setOpen(false);
   };
 
@@ -74,6 +73,7 @@ export default function UploadDialog() {
         const saveImages = functions.httpsCallable('saveImages');
         await saveImages(storageUploadResult);
         handleClose();
+        dispatch(toggleUpload());
       } catch (error) {
         dispatch(toggleUpload());
         // TODO: add a pop up with error
