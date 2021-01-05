@@ -33,7 +33,8 @@ exports.saveImages = functions.https.onCall(async (files, context) => {
           downloadURL: file.downloadURL, 
           isPublic: file.isPublic, 
           uploadedBy: context.auth.uid, 
-          tags: result.labelAnnotations
+          tags: result.labelAnnotations,
+          timeAdded: Date.now()
         });
     }));
   } catch(err) {

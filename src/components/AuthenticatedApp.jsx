@@ -26,7 +26,14 @@ const useStyles = makeStyles(theme => ({
 const AuthenticatedApp = () => {
   const classes = useStyles();
 
-  const images = [1, 2, 3, 4];
+  const images = [{
+    name: 'Photo',
+    downloadPath: 'https://firebasestorage.googleapis.com/v0/b/image-repository-c1030.appspot.com/o/Q3xHqjJy61TXgWIyBvvHepRnUJr2%2FScreenshot%20from%202020-12-17%2015-58-31.png?alt=media&token=57fc4fee-50a1-46b9-aa6d-6e2e7e93236c',
+    isPublic: true,
+    uploadedBy: 'Roman',
+    tags: ['Hello', 'Hi'],
+    timeAdded: 1609816955,
+  }];
 
   return (
     <Grid container>
@@ -40,7 +47,7 @@ const AuthenticatedApp = () => {
         images.map((image, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <ContainerGrid key={index} item xs={12} sm={6} md={4} lg={3} xl={2}>
-            <DisplayCard />
+            <DisplayCard image={image} />
           </ContainerGrid>
         )))
       }

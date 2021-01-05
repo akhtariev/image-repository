@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Chip } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -6,16 +7,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme => ({
   root: {
     marginTop: 50,
-    maxWidth: 345,
+    minWidth: 360,
+    maxWidth: 450,
   },
   media: {
     height: 0,
@@ -39,35 +38,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function DisplayCard() {
+export default function DisplayCard(props) {
+  const { image } = props;
+  const { name, downloadPath, isPublic, uploadedBy, tags, timeAdded } = image;
   const classes = useStyles();
-  const [like, setLike] = React.useState(false);
-
-  const handleLike = () => {
-    setLike(!like);
-  };
-
-  const tags = ['Personal Computer', 'Hello', 'Another one', 'One more'];
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={(
           <Avatar aria-label='recipe' className={classes.avatar}>
-            R
+            {uploadedBy.substr(0, 1).toUpperCase()}
           </Avatar>
         )}
-        action={(
-          <IconButton aria-label='settings'>
-            <MoreVertIcon />
-          </IconButton>
-        )}
-        title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        title={uploadedBy}
+        subheader={`${name} - ${new Date(timeAdded * 1000).toLocaleDateString()} - ${isPublic ? 'Public' : 'Private'}`}
       />
       <CardMedia
         className={classes.media}
-        image='/static/images/cards/paella.jpg'
+        image={downloadPath}
         title='Paella dish'
       />
       <CardContent>
@@ -83,10 +72,6 @@ export default function DisplayCard() {
         }
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites' onClick={handleLike}>
-          <FavoriteIcon color={like ? 'secondary' : 'inherit'} />
-        </IconButton>
-        <Typography>23</Typography>
         <IconButton aria-label='share'>
           <ShareIcon />
         </IconButton>
@@ -94,3 +79,7 @@ export default function DisplayCard() {
     </Card>
   );
 }
+
+DisplayCard.propTypes = {
+  image: PropTypes.object.isRequired,
+};
