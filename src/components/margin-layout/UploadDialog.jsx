@@ -71,14 +71,12 @@ export default function UploadDialog() {
           };
         }));
 
-        console.log(JSON.stringify(storageUploadResult));
-        // eslint-disable-next-line max-len
-        // await admin.firestore().collection('images').doc().set({ name: file.data.name, storageURL: fileRef.fullPath, tags: [], isPublic: file.isPublic, uploadedBy: context.auth.uid });
         const saveImages = functions.httpsCallable('saveImages');
         await saveImages(storageUploadResult);
         handleClose();
       } catch (error) {
-        console.log(error);
+        dispatch(toggleUpload());
+        // TODO: add a pop up with error
       }
     }
   };
